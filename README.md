@@ -1,10 +1,10 @@
-#Porjekto pavadinimas:
+# Projekto pavadinimas:
 Komandos tikslų sekimo sistema
 
-#Sistemos paskirtis:
+# Sistemos paskirtis:
 Kuriama sistema skirta palengvinti komandos vadovams lengviau sekti ir vertinti komandos narių išsikeltus tikslus. Įmonėse komandos nariai turi išsikelti metinius ar kitą laiko tarpą truksiančius tikslus, tačiau tai dažnai būna daroma skirtingose vietose ir informacija gali pasimesti. Todėl šioje sistemoje duomenys bus centralizuoti.
 
-#Funkciniai reikalavimai:
+# Funkciniai reikalavimai:
   4 rolės:
     •Administratorius
     •Komandos vadovas
@@ -17,7 +17,7 @@ Kuriama sistema skirta palengvinti komandos vadovams lengviau sekti ir vertinti 
   Komandos narių tiklsų peržiūrėjimas ir vertinimas.
   Tiklsų sūkurimas, peržiūra, redagavimas, ištrynimas.
   
-#Technologijų aprašymas:
+# Technologijų aprašymas:
 
 Serveriniai daliai naudojama .NET 8 karkasas, kuris palaiko ASP.NET Core: Tai yra pagrindinė biblioteka, skirta kurti API. Middleware: .NET 8 naudoja middleware komponentus, kad apdorotų HTTP užklausas bei autentifikacijai. EF Core: Entity Framework Core leidžia lengvai dirbti su duomenų bazėmis, kadangi tai yra ORM karkasas.
 
@@ -28,5 +28,5 @@ Azure SQL Database yra debesų kompiuterijos paslauga, teikianti SQL Server duom
 
 Sistema bus talpinama Microsoft Azure debesijos platformoje.
 
-#Github repozitorijos nuoroda:
+# Github repozitorijos nuoroda:
 https://github.com/UgniusSau/saitynai-TeamGoalSystem
