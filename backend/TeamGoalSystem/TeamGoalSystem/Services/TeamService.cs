@@ -16,28 +16,20 @@ namespace TeamGoalSystem.Services
         public async Task<IEnumerable<TeamDTO>> GetAllTeamsAsync()
         {
             var teams = await _teamRepository.GetAllAsync();
-            return teams.Select(team => new TeamDTO(
-                team.Id,
-                team.Title,
-                team.Office,
-                team.Division,
-                team.Created,
-                team.TeamLeaderName));
+
+            return teams.Select(team => team.ToDto());
         }
 
         public async Task<TeamDTO> GetTeamByIdAsync(int id)
         {
             var team = await _teamRepository.GetByIdAsync(id);
 
-            return team is null
-                ? throw new Exception($"Team not found")
-                : new TeamDTO(
-                team.Id,
-                team.Title,
-                team.Office,
-                team.Division,
-                team.Created,
-                team.TeamLeaderName);
+            if (team is null)
+            {
+                throw new Exception($"Team not found");
+            }
+
+            return team.ToDto();
         }
 
         public async Task<TeamDTO> CreateTeamAsync(CreateTeamDTO createTeamDTO)
@@ -53,16 +45,10 @@ namespace TeamGoalSystem.Services
 
             var createdTeam = await _teamRepository.AddAsync(team);
 
-            return new TeamDTO(
-                createdTeam.Id,
-                createdTeam.Title,
-                createdTeam.Office,
-                createdTeam.Division,
-                createdTeam.Created,
-                createdTeam.TeamLeaderName);
+            return createdTeam.ToDto();
         }
 
-        public async Task<TeamDTO> UpdateTeamAsync(int id, CreateTeamDTO updateTeamDTO)
+        public async Task<TeamDTO> UpdateTeamAsync(int id, UpdateTeamDTO updateTeamDTO)
         {
             var existingTeam = await _teamRepository.GetByIdAsync(id) ?? throw new Exception($"Team not found");
 
@@ -73,18 +59,13 @@ namespace TeamGoalSystem.Services
 
             var updatedTeam = await _teamRepository.UpdateAsync(existingTeam);
 
-            return new TeamDTO(
-                updatedTeam.Id,
-                updatedTeam.Title,
-                updatedTeam.Office,
-                updatedTeam.Division,
-                updatedTeam.Created,
-                updatedTeam.TeamLeaderName);
+            return updatedTeam.ToDto();
         }
 
-        public async Task<bool> DeleteTeamAsync(int id)
+        public async Task DeleteTeamAsync(int id)
         {
-            return await _teamRepository.DeleteAsync(id);
+            var existingTeam = await _teamRepository.GetByIdAsync(id) ?? throw new Exception($"Team not found");
+            await _teamRepository.DeleteAsync(id);
         }
     }
 }

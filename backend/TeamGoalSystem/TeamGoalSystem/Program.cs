@@ -5,6 +5,9 @@ using TeamGoalSystem.Repository.Interfaces;
 using TeamGoalSystem.Repository;
 using TeamGoalSystem.Services.Interfaces;
 using TeamGoalSystem.Services;
+using FluentValidation;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using TeamGoalSystem.Helpers;
 
 namespace TeamGoalSystem
 {
@@ -34,6 +37,14 @@ namespace TeamGoalSystem
             builder.Services.AddTransient<IMemberService, MemberService>();
             builder.Services.AddTransient<IGoalService, GoalService>();
 
+            //add validation
+            builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+            builder.Services.AddFluentValidationAutoValidation(configuration =>
+            {
+                configuration.DisableBuiltInModelValidation = true;
+                configuration.OverrideDefaultResultFactoryWith<ProblemDetailsResultFactory>();
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -47,6 +58,8 @@ namespace TeamGoalSystem
 
             app.UseAuthorization();
 
+            //app.MapGroup("/api").AddFluentValidationAutoValidation().MapControllers();
+            
 
             app.MapControllers();
 

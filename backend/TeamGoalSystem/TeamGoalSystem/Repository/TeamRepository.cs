@@ -31,10 +31,8 @@ namespace TeamGoalSystem.Repository
             return team;
         }
 
-        public async Task<Team?> UpdateAsync(Team team)
+        public async Task<Team> UpdateAsync(Team team)
         {
-            if (team == null || team.IsDeleted) return null;
-
             _db.Entry(team).CurrentValues.SetValues(team);
             await _db.SaveChangesAsync();
             return team;

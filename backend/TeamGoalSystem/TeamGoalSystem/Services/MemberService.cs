@@ -1,7 +1,96 @@
-﻿using TeamGoalSystem.Services.Interfaces;
+﻿using TeamGoalSystem.Data.Models;
+using TeamGoalSystem.Data.Models.DTO;
+using TeamGoalSystem.Repository.Interfaces;
+using TeamGoalSystem.Services.Interfaces;
 namespace TeamGoalSystem.Services
 {
     public class MemberService : IMemberService
     {
+        private readonly IMemberRepository _memberRepository;
+        private readonly ITeamRepository _teamRepository;
+
+        public MemberService(ITeamRepository teamRepository, IMemberRepository memberRepository)
+        {
+            _teamRepository = teamRepository;
+            _memberRepository = memberRepository;
+        }
+
+        public async Task<IEnumerable<MemberDTO>> GetAllTeamMembersAsync(int teamId)
+        {
+            var team = await _teamRepository.GetByIdAsync(teamId) ?? throw new Exception($"Team not found");
+
+            var members = await _memberRepository.GetAllTeamMembersAsync(teamId);
+
+            return members.Select(member => member.ToDto());
+        }
+
+        public async Task<MemberDTO> GetTeamMemberByIdAsync(int teamId, int memberId)
+        {
+            var team = await _teamRepository.GetByIdAsync(teamId);
+
+            if (team is null)
+            {
+                throw new Exception($"Team not found");
+            }
+
+            var member = await _memberRepository.GetTeamMemberByIdAsync(teamId, memberId);
+
+            if (member is null)
+            {
+                throw new Exception($"Member not found");
+            }
+
+            return member.ToDto();
+
+        }
+
+        public async Task<MemberDTO> CreateTeamMemberAsync(int teamId, CreateMemberDTO createMemberDTO)
+        {
+            var team = await _teamRepository.GetByIdAsync(teamId);
+
+            if (team is null)
+            {
+                throw new Exception($"Team not found");
+            }
+
+            var member = new Member
+            {
+                Name = createMemberDTO.Name,
+                Surname = createMemberDTO.Surname,
+                Role = createMemberDTO.Role,
+                Email = createMemberDTO.Email,
+                JoinDate = createMemberDTO.JoinDate,
+                Team = team
+            };
+
+            var createdMember = await _memberRepository.AddTeamMemberAsync(member);
+
+            return createdMember.ToDto();
+        }
+
+        public async Task<MemberDTO> UpdateTeamMemberAsync(int teamId, int memberId, UpdateMemberDTO member)
+        {
+            var existingTeam = await _teamRepository.GetByIdAsync(teamId) ?? throw new Exception($"Team not found");
+            var existingMember = await _memberRepository.GetTeamMemberByIdAsync(teamId, memberId) ?? throw new Exception($"Member not found");
+
+            existingMember.Name = member.Name;
+            existingMember.Surname = member.Surname;
+            existingMember.Role = member.Role;
+            existingMember.Email = member.Email;
+            existingMember.JoinDate = member.JoinDate;
+
+            var updatedMember = await _memberRepository.UpdateTeamMemberAsync(existingMember);
+
+            return updatedMember.ToDto();
+        }
+
+
+        public async Task DeleteTeamMemberAsync(int teamId, int memberId)
+        {
+            var existingTeam = await _teamRepository.GetByIdAsync(teamId) ?? throw new Exception($"Team not found");
+            var existingMember = await _memberRepository.GetTeamMemberByIdAsync(teamId, memberId) ?? throw new Exception($"Member not found");
+
+            await _memberRepository.DeleteTeamMemberAsync(teamId, memberId);
+        }
     }
 }

@@ -15,4 +15,11 @@
         DateTime FinishDate,
         bool IsCompleted
     );
+
+    public record UpdateGoalDTO(
+        string Title,
+        string Description,
+        DateTime FinishDate,
+        bool IsCompleted
+    );
 }

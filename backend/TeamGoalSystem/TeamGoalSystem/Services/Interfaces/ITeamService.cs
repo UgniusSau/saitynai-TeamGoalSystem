@@ -8,7 +8,7 @@ namespace TeamGoalSystem.Services.Interfaces
         Task<IEnumerable<TeamDTO>> GetAllTeamsAsync();
         Task<TeamDTO> GetTeamByIdAsync(int id);
         Task<TeamDTO> CreateTeamAsync(CreateTeamDTO team);
-        Task<TeamDTO> UpdateTeamAsync(int id, CreateTeamDTO team);
-        Task<bool> DeleteTeamAsync(int id);
+        Task<TeamDTO> UpdateTeamAsync(int id, UpdateTeamDTO team);
+        Task DeleteTeamAsync(int id);
     }
 }
