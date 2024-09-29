@@ -5,10 +5,10 @@ Komandos tikslų sekimo sistema
 Kuriama sistema skirta palengvinti komandos vadovams lengviau sekti ir vertinti komandos narių išsikeltus tikslus. Įmonėse komandos nariai turi išsikelti metinius ar kitą laiko tarpą truksiančius tikslus, tačiau tai dažnai būna daroma skirtingose vietose ir informacija gali pasimesti. Todėl šioje sistemoje duomenys bus centralizuoti.
 
 # Funkciniai reikalavimai:
-  3 rolės:
-  • Administratorius
-  • Komandos vadovas
-  • Svečias
+  3 rolės:\
+  • Administratorius\
+  • Komandos vadovas\
+  • Svečias\
     
   Registracija prisijungimas prie sistemos.
   Komandos vadovo sukūrimas, ištrinimas.
