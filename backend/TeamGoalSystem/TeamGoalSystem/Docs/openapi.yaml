@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: https://api.teamgoalsystem.com/v1
+  - url: https://localhost:7088
 
 paths:
   /teams:
@@ -23,6 +23,20 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Team"
+              example:
+                - id: 1
+                  title: "Marketing Team"
+                  office: "New York"
+                  division: "Sales"
+                  teamLeaderName: "John Doe"
+                  created: "2023-01-01T00:00:00Z"
+                - id: 2
+                  title: "Development Team"
+                  office: "San Francisco"
+                  division: "Engineering"
+                  teamLeaderName: "Jane Smith"
+                  created: "2023-02-01T00:00:00Z"
+              
     post:
       summary: Create a new team
       tags:
@@ -33,6 +47,11 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateTeam"
+            example:
+              title: "Support Team"
+              office: "London"
+              division: "Customer Support"
+              teamLeaderName: "Alice Johnson"
       responses:
         "201":
           description: Team created
@@ -40,6 +59,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Team"
+              example:
+                id: 3
+                title: "Support Team"
+                office: "London"
+                division: "Customer Support"
+                teamLeaderName: "Alice Johnson"
+                created: "2023-03-01T00:00:00Z"
         "400":
           description: Bad request
         "422":
@@ -60,6 +86,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Team"
+              example:
+                id: 1
+                title: "Marketing Team"
+                office: "New York"
+                division: "Sales"
+                teamLeaderName: "John Doe"
+                created: "2023-01-01T00:00:00Z"
         "404":
           $ref: "#/components/responses/notFound"
     put:
@@ -72,6 +105,11 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UpdateTeam"
+            example:
+              title: "Updated Marketing Team"
+              office: "New York"
+              division: "Sales"
+              teamLeaderName: "John Doe"
       responses:
         "200":
           description: Team updated
@@ -79,6 +117,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Team"
+              example:
+                id: 1
+                title: "Updated Marketing Team"
+                office: "New York"
+                division: "Sales"
+                teamLeaderName: "John Doe"
+                created: "2023-01-01T00:00:00Z"
         "404":
           $ref: "#/components/responses/notFound"
         "400":
@@ -113,6 +158,19 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Member"
+              example:
+                - id: 1
+                  name: "John"
+                  surname: "Doe"
+                  role: "Developer"
+                  email: "john.doe@example.com"
+                  joinDate: "2023-03-01T00:00:00Z"
+                - id: 2
+                  name: "Jane"
+                  surname: "Smith"
+                  role: "Manager"
+                  email: "jane.smith@example.com"
+                  joinDate: "2023-03-05T00:00:00Z"
         "404":
           $ref: "#/components/responses/notFound"
     post:
@@ -125,6 +183,12 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateMember"
+            example:
+              name: "Alice"
+              surname: "Johnson"
+              role: "Support"
+              email: "alice.johnson@example.com"
+              joinDate: "2023-04-01T00:00:00Z"
       responses:
         "201":
           description: Member created
@@ -132,6 +196,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Member"
+              example:
+                id: 3
+                name: "Alice"
+                surname: "Johnson"
+                role: "Support"
+                email: "alice.johnson@example.com"
+                joinDate: "2023-04-01T00:00:00Z"
         "400":
           description: Bad request
         "404":
@@ -155,6 +226,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Member"
+              example:
+                id: 1
+                name: "John"
+                surname: "Doe"
+                role: "Developer"
+                email: "john.doe@example.com"
+                joinDate: "2023-03-01T00:00:00Z"
         "404":
           $ref: "#/components/responses/notFound"
     put:
@@ -167,6 +245,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UpdateMember"
+            example:
+              role: "Lead Developer"
+              email: "john.doe@newexample.com"
       responses:
         "200":
           description: Member updated
@@ -174,6 +255,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Member"
+              example:
+                id: 1
+                name: "John"
+                surname: "Doe"
+                role: "Lead Developer"
+                email: "john.doe@newexample.com"
+                joinDate: "2023-03-01T00:00:00Z"
         "404":
           $ref: "#/components/responses/notFound"
         "400":
@@ -209,6 +297,19 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Goal"
+              example:
+                - id: 1
+                  title: "Complete Project A"
+                  description: "Finish all tasks related to Project A"
+                  createdDate: "2023-01-15T00:00:00Z"
+                  finishDate: "2023-10-01T00:00:00Z"
+                  isCompleted: false
+                - id: 2
+                  title: "Attend Training"
+                  description: "Complete leadership training program"
+                  createdDate: "2023-02-01T00:00:00Z"
+                  finishDate: "2023-06-01T00:00:00Z"
+                  isCompleted: true
         "404":
           $ref: "#/components/responses/notFound"
     post:
@@ -221,6 +322,11 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateGoal"
+            example:
+              title: "Improve Coding Skills"
+              description: "Complete advanced coding course"
+              finishDate: "2024-10-01T00:00:00Z"
+              isCompleted: false
       responses:
         "201":
           description: Goal created
@@ -228,6 +334,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Goal"
+              example:
+                id: 3
+                title: "Improve Coding Skills"
+                description: "Complete advanced coding course"
+                createdDate: "2023-04-01T00:00:00Z"
+                finishDate: "2024-10-01T00:00:00Z"
+                isCompleted: false
         "400":
           description: Bad request
         "404":
@@ -252,6 +365,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Goal"
+              example:
+                id: 1
+                title: "Complete Project A"
+                description: "Finish all tasks related to Project A"
+                createdDate: "2023-01-15T00:00:00Z"
+                finishDate: "2023-10-01T00:00:00Z"
+                isCompleted: false
         "404":
           $ref: "#/components/responses/notFound"
     put:
@@ -264,6 +384,11 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UpdateGoal"
+            example:
+              title: "Update Coding Skills"
+              description: "Complete updated coding course"
+              finishDate: "2024-12-01T00:00:00Z"
+              isCompleted: false
       responses:
         "200":
           description: Goal updated
@@ -271,6 +396,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Goal"
+              example:
+                id: 1
+                title: "Update Coding Skills"
+                description: "Complete updated coding course"
+                createdDate: "2023-01-15T00:00:00Z"
+                finishDate: "2024-12-01T00:00:00Z"
+                isCompleted: false
         "404":
           $ref: "#/components/responses/notFound"
         "400":
@@ -324,6 +456,13 @@ components:
         created:
           type: string
           format: date-time
+      example:
+        id: 1
+        title: "Marketing Team"
+        office: "New York"
+        division: "Sales"
+        teamLeaderName: "John Doe"
+        created: "2023-01-01T00:00:00Z"
 
     CreateTeam:
       type: object
@@ -341,6 +480,11 @@ components:
           type: string
         teamLeaderName:
           type: string
+      example:
+        title: "Support Team"
+        office: "London"
+        division: "Customer Support"
+        teamLeaderName: "Alice Johnson"
 
     UpdateTeam:
       type: object
@@ -353,6 +497,11 @@ components:
           type: string
         teamLeaderName:
           type: string
+      example:
+        title: "Updated Marketing Team"
+        office: "New York"
+        division: "Sales"
+        teamLeaderName: "John Doe"
 
     Member:
       type: object
@@ -370,6 +519,13 @@ components:
         joinDate:
           type: string
           format: date-time
+      example:
+        id: 1
+        name: "John"
+        surname: "Doe"
+        role: "Developer"
+        email: "john.doe@example.com"
+        joinDate: "2023-03-01T00:00:00Z"
 
     CreateMember:
       type: object
@@ -390,6 +546,12 @@ components:
         joinDate:
           type: string
           format: date-time
+      example:
+        name: "Alice"
+        surname: "Johnson"
+        role: "Support"
+        email: "alice.johnson@example.com"
+        joinDate: "2023-04-01T00:00:00Z"
 
     UpdateMember:
       type: object
@@ -405,6 +567,9 @@ components:
         joinDate:
           type: string
           format: date-time
+      example:
+        role: "Lead Developer"
+        email: "john.doe@newexample.com"
 
     Goal:
       type: object
@@ -423,6 +588,13 @@ components:
           format: date-time
         isCompleted:
           type: boolean
+      example:
+        id: 1
+        title: "Complete Project A"
+        description: "Finish all tasks related to Project A"
+        createdDate: "2023-01-15T00:00:00Z"
+        finishDate: "2023-10-01T00:00:00Z"
+        isCompleted: false
 
     CreateGoal:
       type: object
@@ -440,6 +612,11 @@ components:
           format: date-time
         isCompleted:
           type: boolean
+      example:
+        title: "Improve Coding Skills"
+        description: "Complete advanced coding course"
+        finishDate: "2024-10-01T00:00:00Z"
+        isCompleted: false
 
     UpdateGoal:
       type: object
@@ -453,6 +630,11 @@ components:
           format: date-time
         isCompleted:
           type: boolean
+      example:
+        title: "Update Coding Skills"
+        description: "Complete updated coding course"
+        finishDate: "2024-12-01T00:00:00Z"
+        isCompleted: false
 
   responses:
     notFound:
