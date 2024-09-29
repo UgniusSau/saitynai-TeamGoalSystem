@@ -6,9 +6,9 @@ Kuriama sistema skirta palengvinti komandos vadovams lengviau sekti ir vertinti 
 
 # Funkciniai reikalavimai:
   3 rolės:
-    •Administratorius
-    •Komandos vadovas
-    •Svečias
+  • Administratorius
+  • Komandos vadovas
+  • Svečias
     
   Registracija prisijungimas prie sistemos.
   Komandos vadovo sukūrimas, ištrinimas.
