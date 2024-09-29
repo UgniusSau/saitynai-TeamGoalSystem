@@ -8,7 +8,7 @@ Kuriama sistema skirta palengvinti komandos vadovams lengviau sekti ir vertinti 
   3 rolės:\
   • Administratorius\
   • Komandos vadovas\
-  • Svečias\
+  • Svečias
     
   Registracija prisijungimas prie sistemos.
   Komandos vadovo sukūrimas, ištrinimas.
