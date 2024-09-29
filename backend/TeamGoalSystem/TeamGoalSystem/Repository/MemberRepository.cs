@@ -18,6 +18,7 @@ namespace TeamGoalSystem.Repository
         {
             return await _db.Members.Where(m => !m.IsDeleted && m.Team.Id.Equals(teamId)).ToListAsync();
         }
+
         public async Task<Member?> GetTeamMemberByIdAsync(int teamId, int memberId)
         {
             return await _db.Members.FirstOrDefaultAsync(m => m.Id == memberId && !m.IsDeleted && m.Team.Id.Equals(teamId));
@@ -39,12 +40,24 @@ namespace TeamGoalSystem.Repository
 
         public async Task<bool> DeleteTeamMemberAsync(int teamId, int memberId)
         {
-            var member = await _db.Members.FirstOrDefaultAsync(m => m.Id == memberId && !m.IsDeleted && m.Team.Id.Equals(teamId));
+            var member = await _db.Members
+                                .FirstOrDefaultAsync(m => m.Id == memberId && !m.IsDeleted && m.Team.Id == teamId);
 
-            if (member == null || member.IsDeleted) return false;
+            if (member == null) return false;
 
             member.IsDeleted = true;
+
+            var memberGoals = await _db.Goals
+                .Where(g => g.Member.Id == memberId && !g.IsDeleted)
+                .ToListAsync();
+
+            foreach (var goal in memberGoals)
+            {
+                goal.IsDeleted = true;
+            }
+
             await _db.SaveChangesAsync();
+
             return true;
         }
     }

@@ -52,10 +52,10 @@ namespace TeamGoalSystem.Services
         {
             var existingTeam = await _teamRepository.GetByIdAsync(id) ?? throw new Exception($"Team not found");
 
-            existingTeam.Title = updateTeamDTO.Title;
-            existingTeam.Office = updateTeamDTO.Office;
-            existingTeam.Division = updateTeamDTO.Division;
-            existingTeam.TeamLeaderName = updateTeamDTO.TeamLeaderName;
+            existingTeam.Title = updateTeamDTO.Title ?? existingTeam.Title;
+            existingTeam.Office = updateTeamDTO.Office ?? existingTeam.Office;
+            existingTeam.Division = updateTeamDTO.Division ?? existingTeam.Division;
+            existingTeam.TeamLeaderName = updateTeamDTO.TeamLeaderName ?? existingTeam.TeamLeaderName;
 
             var updatedTeam = await _teamRepository.UpdateAsync(existingTeam);
 

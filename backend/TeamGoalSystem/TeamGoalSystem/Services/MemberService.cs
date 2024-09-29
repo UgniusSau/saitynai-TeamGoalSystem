@@ -41,7 +41,6 @@ namespace TeamGoalSystem.Services
             }
 
             return member.ToDto();
-
         }
 
         public async Task<MemberDTO> CreateTeamMemberAsync(int teamId, CreateMemberDTO createMemberDTO)
@@ -73,11 +72,11 @@ namespace TeamGoalSystem.Services
             var existingTeam = await _teamRepository.GetByIdAsync(teamId) ?? throw new Exception($"Team not found");
             var existingMember = await _memberRepository.GetTeamMemberByIdAsync(teamId, memberId) ?? throw new Exception($"Member not found");
 
-            existingMember.Name = member.Name;
-            existingMember.Surname = member.Surname;
-            existingMember.Role = member.Role;
-            existingMember.Email = member.Email;
-            existingMember.JoinDate = member.JoinDate;
+            existingMember.Name = member.Name ?? existingMember.Name;
+            existingMember.Surname = member.Surname ?? existingMember.Surname;
+            existingMember.Role = member.Role ?? existingMember.Role;
+            existingMember.Email = member.Email ?? existingMember.Email;
+            existingMember.JoinDate = member.JoinDate ?? existingMember.JoinDate;
 
             var updatedMember = await _memberRepository.UpdateTeamMemberAsync(existingMember);
 

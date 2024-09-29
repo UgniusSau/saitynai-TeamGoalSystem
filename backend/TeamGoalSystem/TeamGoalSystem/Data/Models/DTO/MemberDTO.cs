@@ -29,8 +29,6 @@ namespace TeamGoalSystem.Data.Models.DTO
                 RuleFor(x => x.Email).NotEmpty().EmailAddress();
                 RuleFor(x => x.JoinDate)
                                .NotEmpty()
-                               .GreaterThanOrEqualTo(DateTime.Today.AddDays(-7))
-                               .WithMessage("Date must be a week back or later.")
                                .LessThanOrEqualTo(DateTime.Today.AddYears(1))
                                .WithMessage("Date must be within the next year.");
             }
@@ -42,7 +40,7 @@ namespace TeamGoalSystem.Data.Models.DTO
        string Surname,
        string Role,
        string Email,
-       DateTime JoinDate
+       DateTime? JoinDate
     )
     {
         public class UpdateMemberDTOValidator : AbstractValidator<UpdateMemberDTO>
@@ -54,10 +52,17 @@ namespace TeamGoalSystem.Data.Models.DTO
                 RuleFor(x => x.Role).MaximumLength(50);
                 RuleFor(x => x.Email).EmailAddress();
                 RuleFor(x => x.JoinDate)
-                               .GreaterThanOrEqualTo(DateTime.Today.AddDays(-7))
-                               .WithMessage("Date must be a week back or later.")
-                               .LessThanOrEqualTo(DateTime.Today.AddYears(1))
-                               .WithMessage("Date must be within the next year.");
+                            .Cascade(CascadeMode.Stop)
+                            .NotNull()
+                                .When(x => x.JoinDate.HasValue)
+                                .WithMessage("JoinDate must be provided.")
+                            .GreaterThanOrEqualTo(DateTime.Today.AddDays(-7))
+                                .When(x => x.JoinDate.HasValue)
+                                .WithMessage("Date must be a week back or later.")
+                            .LessThanOrEqualTo(DateTime.Today.AddYears(1))
+                                .When(x => x.JoinDate.HasValue)
+                                .WithMessage("Date must be within the next year.");
+
 
                 RuleFor(x => x)
                     .Must(AtLeastOnePropertyNotEmpty)

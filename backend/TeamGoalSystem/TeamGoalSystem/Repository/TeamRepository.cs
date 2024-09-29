@@ -44,6 +44,25 @@ namespace TeamGoalSystem.Repository
             if (team == null || team.IsDeleted) return false;
 
             team.IsDeleted = true;
+
+            var members = await _db.Members
+                .Where(m => m.Team.Id == id && !m.IsDeleted)
+                .ToListAsync();
+
+            foreach (var member in members)
+            {
+                member.IsDeleted = true;
+
+                var goals = await _db.Goals
+                    .Where(g => g.Member.Id == member.Id && !g.IsDeleted)
+                    .ToListAsync();
+
+                foreach (var goal in goals)
+                {
+                    goal.IsDeleted = true;
+                }
+            }
+
             await _db.SaveChangesAsync();
             return true;
         }

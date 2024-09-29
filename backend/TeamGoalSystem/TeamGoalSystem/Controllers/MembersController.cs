@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TeamGoalSystem.Data.Models;
 using TeamGoalSystem.Data.Models.DTO;
 using TeamGoalSystem.Helpers;
-using TeamGoalSystem.Services;
 using TeamGoalSystem.Services.Interfaces;
 
 namespace TeamGoalSystem.Controllers
@@ -74,9 +72,9 @@ namespace TeamGoalSystem.Controllers
             {
                 var teamId = parameters.TeamId;
 
-                var createdmember = await _memberService.CreateTeamMemberAsync(teamId, createMemberDTO);
+                var createdMember = await _memberService.CreateTeamMemberAsync(teamId, createMemberDTO);
 
-                return CreatedAtAction(nameof(GetTeamMemberById), new { teamId = teamId, memberId = createdmember.Id }, createdmember);
+                return CreatedAtAction(nameof(GetTeamMemberById), new { teamId = teamId, memberId = createdMember.Id }, createdMember);
             }
             catch (Exception ex)
             {
