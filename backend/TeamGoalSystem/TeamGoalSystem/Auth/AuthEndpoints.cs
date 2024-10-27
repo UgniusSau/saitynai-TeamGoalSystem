@@ -104,7 +104,7 @@ namespace TeamGoalSystem.Auth
                 HttpOnly = true,
                 SameSite = SameSiteMode.Lax,
                 Expires = expiresAt,
-                Secure = true
+                //Secure = true
             };
 
             _httpContextAccessor.HttpContext.Response.Cookies.Append("RefreshToken", refreshToken, cookiesOptions);
@@ -155,7 +155,7 @@ namespace TeamGoalSystem.Auth
                 HttpOnly = true,
                 SameSite = SameSiteMode.Lax,
                 Expires = expiresAt,
-                Secure = true
+                //Secure = true
             };
 
             _httpContextAccessor.HttpContext.Response.Cookies.Append("RefreshToken", newRefreshToken, cookiesOptions);

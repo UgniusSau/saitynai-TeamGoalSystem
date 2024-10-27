@@ -25,6 +25,7 @@ namespace TeamGoalSystem.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllTeams()
         {
+            var u = User;
             try
             {
                 var teams = await _teamService.GetAllTeamsAsync();
