@@ -27,15 +27,15 @@ namespace TeamGoalSystem
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            builder.Services.AddDbContext<GoalSystemContext>(options =>
-                options.UseSqlServer(builder.Configuration["ConnectionStrings:AzureSQL"]));
-
             // Add services to the container.
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<GoalSystemContext>(options =>
+                    options.UseSqlServer(builder.Configuration["ConnectionStrings:AzureSQL"]));
 
             // Register repositories as transient
             builder.Services.AddHttpContextAccessor();
@@ -96,11 +96,9 @@ namespace TeamGoalSystem
             var dbSeeder = scope.ServiceProvider.GetRequiredService<AuthSeeder>();
             await dbSeeder.SeedAsync();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
