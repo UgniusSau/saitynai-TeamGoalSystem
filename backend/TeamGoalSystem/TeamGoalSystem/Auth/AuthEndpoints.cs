@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace TeamGoalSystem.Auth
 {
-    [Route("auth")]
+    [Route("api/auth")]
     public class AuthEndpoints : ControllerBase
     {
         private readonly UserManager<GoalSystemUser> _userManager;
