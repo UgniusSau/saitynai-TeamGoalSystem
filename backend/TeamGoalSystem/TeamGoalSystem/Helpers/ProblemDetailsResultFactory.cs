@@ -15,7 +15,7 @@ namespace TeamGoalSystem.Helpers
                     Title = "Bad Request",
                     Status = 400,
                     Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                    Errors = "Invalid JSON format"
+                    ValidationErrors = "Invalid JSON format"
                 };
 
                 return new ObjectResult(badRequestDetails)

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Validators;
 
 namespace TeamGoalSystem.Data.Models.DTO
 {
@@ -50,7 +51,7 @@ namespace TeamGoalSystem.Data.Models.DTO
                 RuleFor(x => x.Name).MaximumLength(50);
                 RuleFor(x => x.Surname).MaximumLength(50);
                 RuleFor(x => x.Role).MaximumLength(50);
-                RuleFor(x => x.Email).EmailAddress();
+                RuleFor(x => x.Email).EmailAddress(EmailValidationMode.Net4xRegex);
                 RuleFor(x => x.JoinDate)
                             .Cascade(CascadeMode.Stop)
                             .NotNull()

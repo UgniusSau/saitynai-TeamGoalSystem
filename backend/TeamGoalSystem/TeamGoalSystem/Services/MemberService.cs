@@ -43,7 +43,7 @@ namespace TeamGoalSystem.Services
             return member.ToDto();
         }
 
-        public async Task<MemberDTO> CreateTeamMemberAsync(int teamId, CreateMemberDTO createMemberDTO)
+        public async Task<MemberDTO> CreateTeamMemberAsync(int teamId, CreateMemberDTO createMemberDTO, string userId)
         {
             var team = await _teamRepository.GetByIdAsync(teamId);
 
@@ -59,7 +59,8 @@ namespace TeamGoalSystem.Services
                 Role = createMemberDTO.Role,
                 Email = createMemberDTO.Email,
                 JoinDate = createMemberDTO.JoinDate,
-                Team = team
+                Team = team,
+                UserId = userId
             };
 
             var createdMember = await _memberRepository.AddTeamMemberAsync(member);
@@ -67,10 +68,19 @@ namespace TeamGoalSystem.Services
             return createdMember.ToDto();
         }
 
-        public async Task<MemberDTO> UpdateTeamMemberAsync(int teamId, int memberId, UpdateMemberDTO member)
+        public async Task<MemberDTO> UpdateTeamMemberAsync(int teamId, int memberId, UpdateMemberDTO member, bool isAdmin, string userId)
         {
             var existingTeam = await _teamRepository.GetByIdAsync(teamId) ?? throw new Exception($"Team not found");
-            var existingMember = await _memberRepository.GetTeamMemberByIdAsync(teamId, memberId) ?? throw new Exception($"Member not found");
+
+            Member? existingMember = await _memberRepository.GetTeamMemberByIdAsync(teamId, memberId);
+
+            if (!isAdmin)
+            {
+                if (existingMember == null || existingMember.UserId != userId)
+                {
+                    throw new Exception($"Member not found");
+                }
+            }
 
             existingMember.Name = member.Name ?? existingMember.Name;
             existingMember.Surname = member.Surname ?? existingMember.Surname;
@@ -84,10 +94,18 @@ namespace TeamGoalSystem.Services
         }
 
 
-        public async Task DeleteTeamMemberAsync(int teamId, int memberId)
+        public async Task DeleteTeamMemberAsync(int teamId, int memberId, bool isAdmin, string userId)
         {
             var existingTeam = await _teamRepository.GetByIdAsync(teamId) ?? throw new Exception($"Team not found");
-            var existingMember = await _memberRepository.GetTeamMemberByIdAsync(teamId, memberId) ?? throw new Exception($"Member not found");
+            Member? existingMember = await _memberRepository.GetTeamMemberByIdAsync(teamId, memberId);
+
+            if (!isAdmin)
+            {
+                if (existingMember == null || existingMember.UserId != userId)
+                {
+                    throw new Exception($"Member not found");
+                }
+            }
 
             await _memberRepository.DeleteTeamMemberAsync(teamId, memberId);
         }

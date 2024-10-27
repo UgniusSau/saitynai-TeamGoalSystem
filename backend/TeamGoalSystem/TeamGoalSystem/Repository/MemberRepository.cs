@@ -43,18 +43,16 @@ namespace TeamGoalSystem.Repository
             var member = await _db.Members
                                 .FirstOrDefaultAsync(m => m.Id == memberId && !m.IsDeleted && m.Team.Id == teamId);
 
-            if (member == null) return false;
-
-            member.IsDeleted = true;
-
             var memberGoals = await _db.Goals
                 .Where(g => g.Member.Id == memberId && !g.IsDeleted)
                 .ToListAsync();
 
-            foreach (var goal in memberGoals)
-            {
-                goal.IsDeleted = true;
-            }
+            if(memberGoals.Any())
+                throw new Exception("Member has goals");
+
+            if (member == null) return false;
+
+            member.IsDeleted = true;
 
             await _db.SaveChangesAsync();
 

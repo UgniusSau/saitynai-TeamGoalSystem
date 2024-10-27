@@ -54,7 +54,7 @@ namespace TeamGoalSystem.Services
             return goal.ToDto();
         }
 
-        public async Task<GoalDTO> CreateTeamMemberGoalAsync(int teamId, int memberId, CreateGoalDTO createGoalDTO)
+        public async Task<GoalDTO> CreateTeamMemberGoalAsync(int teamId, int memberId, CreateGoalDTO createGoalDTO, string userId)
         {
             var team = await _teamRepository.GetByIdAsync(teamId);
 
@@ -77,7 +77,8 @@ namespace TeamGoalSystem.Services
                 CreatedDate = DateTime.UtcNow,
                 FinishDate = createGoalDTO.FinishDate,
                 IsCompleted = createGoalDTO.IsCompleted,
-                Member = member
+                Member = member,
+                UserId = userId
             };
 
             var createdGoal = await _goalRepository.AddTeamMemberGoalAsync(goal);
@@ -85,11 +86,20 @@ namespace TeamGoalSystem.Services
             return createdGoal.ToDto();
         }
 
-        public async Task<GoalDTO> UpdateTeamMemberGoalAsync(int teamId, int memberId, int goalId, UpdateGoalDTO updateGoalDTO)
+        public async Task<GoalDTO> UpdateTeamMemberGoalAsync(int teamId, int memberId, int goalId, UpdateGoalDTO updateGoalDTO, bool isAdmin, string userId)
         {
             var existingTeam = await _teamRepository.GetByIdAsync(teamId) ?? throw new Exception($"Team not found");
             var existingMember = await _memberRepository.GetTeamMemberByIdAsync(teamId, memberId) ?? throw new Exception($"Member not found");
-            var existingGoal = await _goalRepository.GetTeamMemberGoalByIdAsync(memberId, goalId) ?? throw new Exception($"Goal not found");
+
+            Goal? existingGoal = await _goalRepository.GetTeamMemberGoalByIdAsync(memberId, goalId);
+
+            if (!isAdmin)
+            {
+                if (existingGoal == null || existingGoal.UserId != userId)
+                {
+                    throw new Exception($"Goal not found");
+                }
+            }
 
             existingGoal.Title = updateGoalDTO.Title ?? existingGoal.Title;
             existingGoal.Description = updateGoalDTO.Description ?? existingGoal.Description;
@@ -101,11 +111,19 @@ namespace TeamGoalSystem.Services
             return updatedGoal.ToDto();
         }
        
-        public async Task DeleteTeamMemberGoalAsync(int teamId, int memberId, int goalId)
+        public async Task DeleteTeamMemberGoalAsync(int teamId, int memberId, int goalId, bool isAdmin, string userId)
         {
             var existingTeam = await _teamRepository.GetByIdAsync(teamId) ?? throw new Exception($"Team not found");
             var existingMember = await _memberRepository.GetTeamMemberByIdAsync(teamId, memberId) ?? throw new Exception($"Member not found");
-            var existingGoal = await _goalRepository.GetTeamMemberGoalByIdAsync(memberId, goalId) ?? throw new Exception($"Goal not found");
+            Goal? existingGoal = await _goalRepository.GetTeamMemberGoalByIdAsync(memberId, goalId);
+
+            if (!isAdmin)
+            {
+                if (existingGoal == null || existingGoal.UserId != userId)
+                {
+                    throw new Exception($"Goal not found");
+                }
+            }
 
             await _goalRepository.DeleteTeamMemberGoalAsync(memberId, goalId);
         }

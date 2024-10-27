@@ -6,8 +6,8 @@ namespace TeamGoalSystem.Services.Interfaces
     {
         Task<IEnumerable<MemberDTO>> GetAllTeamMembersAsync(int teamId);
         Task<MemberDTO> GetTeamMemberByIdAsync(int teamId, int memberId);
-        Task<MemberDTO> CreateTeamMemberAsync(int teamId, CreateMemberDTO createMemberDTO);
-        Task<MemberDTO> UpdateTeamMemberAsync(int teamId, int memberId, UpdateMemberDTO updateMemberDTO);
-        Task DeleteTeamMemberAsync(int teamId, int memberId);
+        Task<MemberDTO> CreateTeamMemberAsync(int teamId, CreateMemberDTO createMemberDTO, string userId);
+        Task<MemberDTO> UpdateTeamMemberAsync(int teamId, int memberId, UpdateMemberDTO updateMemberDTO, bool isAdmin, string userId);
+        Task DeleteTeamMemberAsync(int teamId, int memberId, bool isAdmin, string userId);
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamGoalSystem.Data.ContextDb;
 
@@ -11,9 +12,11 @@ using TeamGoalSystem.Data.ContextDb;
 namespace TeamGoalSystem.Migrations
 {
     [DbContext(typeof(GoalSystemContext))]
-    partial class TeamDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241027112110_User update")]
+    partial class Userupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -318,36 +321,6 @@ namespace TeamGoalSystem.Migrations
                     b.ToTable("Members");
                 });
 
-            modelBuilder.Entity("TeamGoalSystem.Data.Models.Session", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("ExpiresAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("InitiatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("IsRevoked")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastRefreshToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Sessions");
-                });
-
             modelBuilder.Entity("TeamGoalSystem.Data.Models.Team", b =>
                 {
                     b.Property<int>("Id")
@@ -474,17 +447,6 @@ namespace TeamGoalSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("Team");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TeamGoalSystem.Data.Models.Session", b =>
-                {
-                    b.HasOne("TeamGoalSystem.Auth.Model.GoalSystemUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

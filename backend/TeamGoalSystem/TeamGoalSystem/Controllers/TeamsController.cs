@@ -1,6 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using TeamGoalSystem.Auth.Model;
 using TeamGoalSystem.Data.Models.DTO;
 using TeamGoalSystem.Services.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace TeamGoalSystem.Controllers
 {
@@ -9,13 +13,16 @@ namespace TeamGoalSystem.Controllers
     public class TeamsController : ControllerBase
     {
         private readonly ITeamService _teamService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public TeamsController(ITeamService teamService)
+        public TeamsController(ITeamService teamService, IHttpContextAccessor httpContextAccessor)
         {
             _teamService = teamService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllTeams()
         {
             try
@@ -30,6 +37,7 @@ namespace TeamGoalSystem.Controllers
         }
 
         [HttpGet("{teamId}")]
+        [Authorize]
         public async Task<IActionResult> GetTeamById(int teamId)
         {
             try
@@ -49,6 +57,7 @@ namespace TeamGoalSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.TeamLeader)]
         public async Task<IActionResult> CreateTeam([FromBody] CreateTeamDTO createTeamDTO)
         {
             if (createTeamDTO == null)
@@ -58,7 +67,8 @@ namespace TeamGoalSystem.Controllers
 
             try
             {
-                var createdTeam = await _teamService.CreateTeamAsync(createTeamDTO);
+                var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+                var createdTeam = await _teamService.CreateTeamAsync(createTeamDTO, userId);
                 return CreatedAtAction(nameof(GetTeamById), new { teamId = createdTeam.Id }, createdTeam);
             }
             catch (Exception)
@@ -67,17 +77,16 @@ namespace TeamGoalSystem.Controllers
             }
         }
 
-        [HttpPut("{teamId}")]
+        [HttpPatch("{teamId}")]
+        [Authorize]
         public async Task<IActionResult> UpdateTeam(int teamId, [FromBody] UpdateTeamDTO updateTeamDTO)
         {
-            if (updateTeamDTO == null)
-            {
-                return BadRequest("Team object cannot be empty");
-            }
-
             try
             {
-                var updatedTeam = await _teamService.UpdateTeamAsync(teamId, updateTeamDTO);
+                var isAdmin = _httpContextAccessor.HttpContext.User.IsInRole(Roles.Admin);
+                var requestUserId = _httpContextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+                var updatedTeam = await _teamService.UpdateTeamAsync(teamId, updateTeamDTO, isAdmin, requestUserId);
                 
                 return Ok(updatedTeam);
             }
@@ -92,11 +101,14 @@ namespace TeamGoalSystem.Controllers
         }
 
         [HttpDelete("{teamId}")]
+        [Authorize]
         public async Task<IActionResult> DeleteTeam(int teamId)
         {
             try
             {
-                await _teamService.DeleteTeamAsync(teamId);
+                var isAdmin = _httpContextAccessor.HttpContext.User.IsInRole(Roles.Admin);
+                var requestUserId = _httpContextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+                await _teamService.DeleteTeamAsync(teamId, isAdmin, requestUserId);
 
                 return NoContent();
             }
@@ -105,6 +117,7 @@ namespace TeamGoalSystem.Controllers
                 return ex.Message switch
                 {
                     "Team not found" => NotFound("Team not found"),
+                    "Team has members" => Conflict("Team has members and cannot be deleted"),
                     _ => StatusCode(500, "Error occured while getting team")
                 };
             }

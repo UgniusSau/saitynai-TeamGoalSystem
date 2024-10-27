@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using TeamGoalSystem.Data.Models.DTO;
+using TeamGoalSystem.Auth.Model;
 
 namespace TeamGoalSystem.Data.Models
 {
@@ -17,6 +18,13 @@ namespace TeamGoalSystem.Data.Models
         public bool IsCompleted { get; set; }
         public bool IsDeleted { get; set; }
         public required Member Member { get; set; }
+
+        [Required]
+        public required string UserId { get; set; }
+
+        [ForeignKey("UserId")]
+        public GoalSystemUser User { get; set; }
+
         public GoalDTO ToDto()
         {
             return new GoalDTO(Id, Title, Description, CreatedDate, FinishDate, IsCompleted);

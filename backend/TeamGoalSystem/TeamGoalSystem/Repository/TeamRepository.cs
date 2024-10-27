@@ -41,27 +41,18 @@ namespace TeamGoalSystem.Repository
         public async Task<bool> DeleteAsync(int id)
         {
             var team = await _db.Teams.FindAsync(id);
-            if (team == null || team.IsDeleted) return false;
-
-            team.IsDeleted = true;
 
             var members = await _db.Members
                 .Where(m => m.Team.Id == id && !m.IsDeleted)
                 .ToListAsync();
 
-            foreach (var member in members)
-            {
-                member.IsDeleted = true;
+            if (members.Any())
+                throw new Exception("Team has members");
 
-                var goals = await _db.Goals
-                    .Where(g => g.Member.Id == member.Id && !g.IsDeleted)
-                    .ToListAsync();
+            if (team == null || team.IsDeleted) return false;
 
-                foreach (var goal in goals)
-                {
-                    goal.IsDeleted = true;
-                }
-            }
+
+            team.IsDeleted = true;
 
             await _db.SaveChangesAsync();
             return true;

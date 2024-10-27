@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TeamGoalSystem.Auth.Model;
 using TeamGoalSystem.Data.Models.DTO;
 using TeamGoalSystem.Helpers;
 using TeamGoalSystem.Services.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace TeamGoalSystem.Controllers
 {
@@ -10,13 +14,17 @@ namespace TeamGoalSystem.Controllers
     public class MembersController : ControllerBase
     {
         private readonly IMemberService _memberService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MembersController(IMemberService memberService)
+
+        public MembersController(IMemberService memberService, IHttpContextAccessor httpContextAccessor)
         {
             _memberService = memberService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllTeamMembers([AsParameters] TeamParameters parameters)
         {
             try
@@ -38,6 +46,7 @@ namespace TeamGoalSystem.Controllers
         }
 
         [HttpGet("{memberId}")]
+        [Authorize]
         public async Task<IActionResult> GetTeamMemberById([AsParameters] MemberParameters parameters)
         {
             try
@@ -61,6 +70,7 @@ namespace TeamGoalSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.TeamLeader)]
         public async Task<IActionResult> CreateTeamMember([AsParameters] TeamParameters parameters, [FromBody] CreateMemberDTO createMemberDTO)
         {
             if (createMemberDTO == null)
@@ -70,9 +80,11 @@ namespace TeamGoalSystem.Controllers
 
             try
             {
+                var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
                 var teamId = parameters.TeamId;
 
-                var createdMember = await _memberService.CreateTeamMemberAsync(teamId, createMemberDTO);
+                var createdMember = await _memberService.CreateTeamMemberAsync(teamId, createMemberDTO, userId);
 
                 return CreatedAtAction(nameof(GetTeamMemberById), new { teamId = teamId, memberId = createdMember.Id }, createdMember);
             }
@@ -86,7 +98,8 @@ namespace TeamGoalSystem.Controllers
             }
         }
 
-        [HttpPut("{memberId}")]
+        [HttpPatch("{memberId}")]
+        [Authorize]
         public async Task<IActionResult> UpdateTeamMember([AsParameters] MemberParameters parameters, [FromBody] UpdateMemberDTO updateMemberDTO)
         {
             if (updateMemberDTO == null)
@@ -99,7 +112,10 @@ namespace TeamGoalSystem.Controllers
                 var teamId = parameters.TeamId;
                 var memberId = parameters.MemberId;
 
-                var updatedTeam = await _memberService.UpdateTeamMemberAsync(teamId, memberId, updateMemberDTO);
+                var isAdmin = _httpContextAccessor.HttpContext.User.IsInRole(Roles.Admin);
+                var requestUserId = _httpContextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+                var updatedTeam = await _memberService.UpdateTeamMemberAsync(teamId, memberId, updateMemberDTO, isAdmin, requestUserId);
 
                 return Ok(updatedTeam);
             }
@@ -115,6 +131,7 @@ namespace TeamGoalSystem.Controllers
         }
 
         [HttpDelete("{memberId}")]
+        [Authorize]
         public async Task<IActionResult> DeleteTeamMember([AsParameters] MemberParameters parameters)
         {
             try
@@ -122,7 +139,10 @@ namespace TeamGoalSystem.Controllers
                 var teamId = parameters.TeamId;
                 var memberId = parameters.MemberId;
 
-                await _memberService.DeleteTeamMemberAsync(teamId, memberId);
+                var isAdmin = _httpContextAccessor.HttpContext.User.IsInRole(Roles.Admin);
+                var requestUserId = _httpContextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+                await _memberService.DeleteTeamMemberAsync(teamId, memberId, isAdmin, requestUserId);
 
                 return NoContent();
             }
@@ -132,6 +152,7 @@ namespace TeamGoalSystem.Controllers
                 {
                     "Team not found" => NotFound("Team not found"),
                     "Member not found" => NotFound("Member not found"),
+                    "Member has goals" => Conflict("Member has goals"),
                     _ => StatusCode(500, "Error occured while getting team")
                 };
             }
