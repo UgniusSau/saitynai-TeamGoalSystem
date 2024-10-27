@@ -95,7 +95,6 @@ namespace TeamGoalSystem
             var dbSeeder = scope.ServiceProvider.GetRequiredService<AuthSeeder>();
             await dbSeeder.SeedAsync();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
