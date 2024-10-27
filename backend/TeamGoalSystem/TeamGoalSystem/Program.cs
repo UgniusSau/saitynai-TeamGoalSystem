@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TeamGoalSystem.Auth;
+using Microsoft.OpenApi.Models;
 
 namespace TeamGoalSystem
 {
@@ -32,7 +33,15 @@ namespace TeamGoalSystem
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c => c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Enter: Bearer <token>"
+            }));
 
             builder.Services.AddDbContext<GoalSystemContext>(options =>
                     options.UseSqlServer(builder.Configuration["ConnectionStrings:AzureSQL"]));
