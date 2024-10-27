@@ -40,5 +40,14 @@ namespace TeamGoalSystem.Data.ContextDb
                 .OnDelete(DeleteBehavior.Restrict);
 
         }
+
+        public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<GoalSystemContext>();
+                context.Database.Migrate();
+            }
+        }
     }
 }
