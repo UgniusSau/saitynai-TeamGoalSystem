@@ -41,13 +41,13 @@ namespace TeamGoalSystem.Data.ContextDb
 
         }
 
-        public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
-        {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<GoalSystemContext>();
-                context.Database.Migrate();
-            }
-        }
+        //public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
+        //{
+        //    using (var scope = serviceProvider.CreateScope())
+        //    {
+        //        var context = scope.ServiceProvider.GetRequiredService<GoalSystemContext>();
+        //        context.Database.Migrate();
+        //    }
+        //}
     }
 }
