@@ -4,8 +4,8 @@ import axios from 'axios';
 async function renewToken () {
   try {
     console.log("ateinam i  renew tokennn1")
-    // const result = await axios.get('https://siatynaigoalsystem.azurewebsites.net/accessToken', {
-    const result = await axios.post('https://localhost:7088/api/auth/accessToken');
+    const result = await axios.get('https://siatynaigoalsystem.azurewebsites.net/api/auth/accessToken');
+    //const result = await axios.post('https://localhost:7088/api/auth/accessToken');
     const token = result.data.token;
     console.log('user token updated from', Cookies.get('jwtToken'));
     console.log('user token updated to', token);
