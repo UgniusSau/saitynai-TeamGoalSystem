@@ -89,8 +89,7 @@ namespace TeamGoalSystem
                 options.AddPolicy("AllowAnyOrigin", policyBuilder => policyBuilder
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
+                    .AllowAnyHeader());
             });
             builder.Services.AddMvc();
             builder.Services.AddControllers();
