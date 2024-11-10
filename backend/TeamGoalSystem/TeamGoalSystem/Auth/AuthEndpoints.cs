@@ -126,6 +126,7 @@ namespace TeamGoalSystem.Auth
                 return StatusCode(422, "Unable to get claims");
             }
 
+
             var userId = claims.FindFirstValue(JwtRegisteredClaimNames.Sub);
             var user = await _userManager.FindByIdAsync(userId);
             if (user is null)
