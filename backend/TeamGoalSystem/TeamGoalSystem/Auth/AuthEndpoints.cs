@@ -102,9 +102,9 @@ namespace TeamGoalSystem.Auth
             var cookiesOptions = new CookieOptions()
             {
                 HttpOnly = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = SameSiteMode.None,
                 Expires = expiresAt,
-                //Secure = true
+                Secure = true
             };
 
             _httpContextAccessor.HttpContext.Response.Cookies.Append("RefreshToken", refreshToken, cookiesOptions);
@@ -154,9 +154,9 @@ namespace TeamGoalSystem.Auth
             var cookiesOptions = new CookieOptions()
             {
                 HttpOnly = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = SameSiteMode.None,
                 Expires = expiresAt,
-                //Secure = true
+                Secure = true
             };
 
             _httpContextAccessor.HttpContext.Response.Cookies.Append("RefreshToken", newRefreshToken, cookiesOptions);
@@ -194,7 +194,15 @@ namespace TeamGoalSystem.Auth
             }
 
             await _sessionService.InvalidateSessionAsync(Guid.Parse(sessionId));
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete("RefreshToken");
+
+            var cookiesOptions = new CookieOptions()
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Secure = true
+            };
+
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("RefreshToken", cookiesOptions);
 
             return Ok();
         }

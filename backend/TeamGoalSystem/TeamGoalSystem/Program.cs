@@ -107,9 +107,17 @@ namespace TeamGoalSystem
             }).AddJwtBearer(options =>
             {
                 options.MapInboundClaims = false;
-                options.TokenValidationParameters.ValidAudience = builder.Configuration["Jwt:ValidAudience"];
-                options.TokenValidationParameters.ValidIssuer = builder.Configuration["Jwt:ValidIssuer"];
-                options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]));
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidAudience = builder.Configuration["Jwt:ValidAudience"],
+                    ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])),
+                    ClockSkew = TimeSpan.Zero 
+                };
             });
 
             builder.Services.AddAuthorization();
