@@ -2,6 +2,7 @@
 using TeamGoalSystem.Data.Models.DTO;
 using TeamGoalSystem.Repository.Interfaces;
 using TeamGoalSystem.Services.Interfaces;
+
 namespace TeamGoalSystem.Services
 {
     public class MemberService : IMemberService
