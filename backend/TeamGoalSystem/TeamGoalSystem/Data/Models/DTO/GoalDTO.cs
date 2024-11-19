@@ -55,7 +55,7 @@ namespace TeamGoalSystem.Data.Models.DTO
 
                 RuleFor(x => x)
                     .Must(AtLeastOnePropertyNotEmpty)
-                    .WithMessage("At least one of Name, Surname, Role, Email or JoinDate must be provided.");
+                    .WithMessage("At least one of Title, Description, FinishDate, or IsCompleted must be provided.");
 
                 RuleFor(x => x.FinishDate)
                     .Must((dto, finishDate) => finishDate >= DateTime.Today.AddDays(-7) && finishDate <= DateTime.Today.AddYears(1))

@@ -1,0 +1,95 @@
+/* General styles for the content */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  font-family: "Arial", sans-serif;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px; /* Add a maximum width for content */
+  margin: 0 auto; /* Center the content */
+  margin-bottom: 80px; /* Space for the footer */
+  overflow: hidden; /* Prevent content overflow */
+  word-wrap: break-word; /* Ensure text wraps properly */
+}
+
+/* Logo container and responsive image */
+.logo-container {
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+.responsive-image {
+  width: 100%;
+  height: auto;
+  max-width: 200px;
+}
+
+/* Button group styling */
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap; /* Allow buttons to stack if there's not enough space */
+  justify-content: center;
+  width: 100%;
+}
+
+/* Button styles */
+.login-button,
+.register-button {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+/* Updates section container */
+.updates-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 20px;
+  box-sizing: border-box;
+  word-wrap: break-word; /* Ensure long words or text wrap properly */
+}
+
+/* Update card styling */
+.update-card {
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: calc(50% - 20px); /* 50% width with gap compensation */
+  box-sizing: border-box;
+  text-align: left;
+  word-wrap: break-word; /* Prevent text from overflowing the card */
+  overflow: hidden; /* Ensure the content stays inside the box */
+}
+
+/* Fix layout for smaller screens */
+@media (max-width: 768px) {
+  .content {
+    padding: 15px;
+    margin-bottom: 100px; /* Add extra space for smaller screens */
+  }
+
+  .responsive-image {
+    max-width: 150px;
+  }
+
+  .login-button,
+  .register-button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .updates-container {
+    flex-direction: column; /* Stack squares vertically on small screens */
+    gap: 10px; /* Reduce gap between squares */
+  }
+
+  .update-card {
+    width: 100%; /* Full width for small screens */
+  }
+}

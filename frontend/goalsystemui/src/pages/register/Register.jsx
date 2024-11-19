@@ -1,23 +1,24 @@
 import { Button, Card, DialogContent, Grid, TextField } from "@mui/material";
 import { useNavigate } from "react-router";
 import { Formik, Form } from "formik";
-import { loginTemplateValidation } from "../../validation/loginTemplate";
-import { login } from "../../services/api";
-import { UserContext } from "../../services/authProvider";
-import { useContext } from "react";
+import { registerTemplateValidation } from "../../validation/registerTemplate";
+import { register } from "../../services/api";
 import "../../styles/Login.css";
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
-  const user = useContext(UserContext);
   const initialValues = {
     username: "",
+    email: "",
+    name: "",
+    surname: "",
     password: "",
   };
 
   return (
     <div className="login-container">
-      <h1 className="login-header">Login page</h1>
+      <h1 className="login-header">Register Page</h1>
+
       <Button
         type="submit"
         variant="contained"
@@ -30,11 +31,10 @@ export default function Login() {
       <Formik
         initialValues={initialValues}
         onSubmit={async (values) => {
-          const response = await login(values);
-          user.login(response.token);
-          navigate("/");
+          await register(values);
+          navigate("/login");
         }}
-        validationSchema={loginTemplateValidation}
+        validationSchema={registerTemplateValidation}
       >
         {({
           values,
@@ -65,6 +65,51 @@ export default function Login() {
                     />
                   </Grid>
                   <Grid item xs={12}>
+                    <label className="input-label">Email:</label>
+                    <TextField
+                      name="email"
+                      label="Email"
+                      type="email"
+                      value={values.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      variant="outlined"
+                      fullWidth
+                      error={Boolean(errors.email && touched.email)}
+                      helperText={errors.email && touched.email && errors.email}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <label className="input-label">Name:</label>
+                    <TextField
+                      name="name"
+                      label="Name"
+                      value={values.name}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      variant="outlined"
+                      fullWidth
+                      error={Boolean(errors.name && touched.name)}
+                      helperText={errors.name && touched.name && errors.name}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <label className="input-label">Surname:</label>
+                    <TextField
+                      name="surname"
+                      label="Surname"
+                      value={values.surname}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      variant="outlined"
+                      fullWidth
+                      error={Boolean(errors.surname && touched.surname)}
+                      helperText={
+                        errors.surname && touched.surname && errors.surname
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
                     <label className="input-label">Password:</label>
                     <TextField
                       name="password"
@@ -89,7 +134,7 @@ export default function Login() {
                 disabled={isSubmitting}
                 className="submit-button"
               >
-                Login
+                Register
               </Button>
             </Card>
           </Form>

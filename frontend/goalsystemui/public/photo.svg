@@ -1,0 +1,15 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer circle representing the system -->
+  <circle cx="100" cy="100" r="90" stroke="#4CAF50" stroke-width="8" fill="none"/>
+  
+  <!-- Inner target rings -->
+  <circle cx="100" cy="100" r="60" stroke="#4CAF50" stroke-width="6" fill="none"/>
+  <circle cx="100" cy="100" r="30" stroke="#4CAF50" stroke-width="4" fill="none"/>
+
+  <!-- Arrow pointing to the center (goal) -->
+  <line x1="100" y1="160" x2="100" y2="100" stroke="#FF5722" stroke-width="6" stroke-linecap="round"/>
+  <polygon points="90,110 100,90 110,110" fill="#FF5722"/>
+
+  <!-- Progress indicator -->
+  <circle cx="100" cy="40" r="10" fill="#FF5722"/>
+</svg>

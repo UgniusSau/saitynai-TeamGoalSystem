@@ -1,0 +1,87 @@
+/* Full container to center the login form */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+  text-align: center;
+}
+
+/* Header styling */
+.login-header {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Home button styling */
+.home-button {
+  margin-bottom: 20px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.home-button:hover {
+  background-color: #3a8fb7;
+}
+
+/* Login form styling */
+.login-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Card styling */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Input labels for a bold look */
+.input-label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+/* Submit button with transition */
+.submit-button {
+  width: 100%;
+  margin-top: 20px;
+  font-size: 1rem;
+  padding: 10px;
+  background-color: #1976d2;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #115293;
+}
+
+/* Responsive layout for mobile screens */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 15px;
+  }
+
+  .login-card {
+    padding: 15px;
+  }
+
+  .login-header {
+    font-size: 1.5rem;
+  }
+
+  .home-button,
+  .submit-button {
+    font-size: 0.9rem;
+  }
+}

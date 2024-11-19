@@ -32,7 +32,7 @@ namespace TeamGoalSystem.Auth
             var token = new JwtSecurityToken(
                 issuer: _issuer,
                 audience: _audience,
-                expires: DateTime.UtcNow.AddMinutes(1),
+                expires: DateTime.UtcNow.AddMinutes(15),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(_authsigningKey, SecurityAlgorithms.HmacSha256)
             );

@@ -1,15 +1,15 @@
-import axios from 'axios';
-import authService from './auth';
+import axios from "axios";
+import authService from "./auth";
 
 const token = authService.getToken();
 
 const instance = axios.create({
   baseURL: 'https://siatynaigoalsystem.azurewebsites.net/api/',
-  // baseURL: 'https://localhost:7088/api/',
+  // baseURL: "https://localhost:7088/api/",
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`,
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
   },
 });
 
@@ -27,22 +27,31 @@ instance.interceptors.request.use(
 );
 
 instance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
+    const originalRequest = error.config;
 
-    console.log("ar mes cia ateinam?")
-    if (error.response && error.response.status === 401) {
-      await handleSessionExpired(error.response);
-      console.log("handle session ex?")
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
+      const newToken = await handleSessionExpired();
+      if (newToken) {
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+        return instance(originalRequest);
+      }
     }
+
     return Promise.reject(error);
   }
 );
 
-const handleSessionExpired = async (response) => {
-  authService.renewToken();
+const handleSessionExpired = async () => {
+  const newToken = await authService.renewToken();
+  return newToken;
 };
 
 export default instance;
