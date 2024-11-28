@@ -9,7 +9,8 @@ namespace TeamGoalSystem.Data.Models.DTO
          string Surname,
          string Role,
          string Email,
-         DateTime JoinDate
+         DateTime JoinDate,
+         Guid UserId
     );
 
     public record CreateMemberDTO(

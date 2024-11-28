@@ -4,8 +4,8 @@ import axios from "axios";
 async function renewToken() {
   try {
     const result = await axios.post(
-      'https://siatynaigoalsystem.azurewebsites.net/api/auth/accessToken',
-      // "https://localhost:7088/api/auth/accessToken",
+      // 'https://siatynaigoalsystem.azurewebsites.net/api/auth/accessToken',
+      "https://localhost:7088/api/auth/accessToken",
       {},
       { withCredentials: true }
     );

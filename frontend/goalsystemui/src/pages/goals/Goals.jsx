@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import {
@@ -20,7 +20,8 @@ import {
   useUpdateGoal,
   useRemoveGoal,
 } from "../../hooks/goals/goals";
-
+import { UserContext } from "../../services/authProvider";
+import { hasAccess } from "../../helpers/determineObjectManipulationRights";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -28,6 +29,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 const Goals = () => {
+  const user = useContext(UserContext);
+
   const navigate = useNavigate();
   const { teamId, memberId } = useParams();
   const theme = useTheme();
@@ -60,13 +63,17 @@ const Goals = () => {
   };
 
   const handleGoalEdit = (row) => {
+    if (hasAccess(user.user, row.userId)) {
     setGoal(row);
     setShowGoalEditModal(true);
+    }
   };
 
   const handleGoalRemove = (row) => {
+    if (hasAccess(user.user, row.userId)) {
     setGoal(row);
     setShowGoalRemoveModal(true);
+    }
   };
 
   const columns = [
@@ -138,6 +145,7 @@ const Goals = () => {
             aria-label="edit"
             sx={{ color: "orange" }}
             onClick={() => handleGoalEdit(params.row)}
+            disabled={!hasAccess(user.user, params.row.userId)}
           >
             <ModeEditIcon />
           </IconButton>
@@ -145,6 +153,7 @@ const Goals = () => {
             aria-label="remove"
             sx={{ color: "red" }}
             onClick={() => handleGoalRemove(params.row)}
+            disabled={!hasAccess(user.user, params.row.userId)}
           >
             <DeleteForeverIcon />
           </IconButton>
@@ -170,6 +179,7 @@ const Goals = () => {
           variant="contained"
           sx={{ ml: 2 }}
           onClick={() => setShowGoalCreateModal(true)}
+          disabled={!hasAccess(user.user, gridRows[0]?.userId)}
         >
           Add Goal
         </Button>

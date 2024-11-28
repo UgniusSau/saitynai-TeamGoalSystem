@@ -26,7 +26,7 @@ namespace TeamGoalSystem.Data.Models
 
         public MemberDTO ToDto()
         {
-            return new MemberDTO(Id, Name, Surname, Role, Email, JoinDate);
+            return new MemberDTO(Id, Name, Surname, Role, Email, JoinDate, new Guid(UserId));
         }
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   Button,
@@ -19,12 +19,15 @@ import {
   useUpdateTeam,
   useRemoveTeam,
 } from "../../hooks/teams/teams";
+import { UserContext } from "../../services/authProvider";
 
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import { hasAccess } from "../../helpers/determineObjectManipulationRights";
 
 const Teams = () => {
+  const user = useContext(UserContext);
   const { data } = useTeamsList();
   const createTeam = useCreateTeam();
   const updateTeam = useUpdateTeam();
@@ -46,13 +49,17 @@ const Teams = () => {
   };
 
   const handleTeamEdit = (team) => {
-    setSelectedTeam(team);
-    setShowEditModal(true);
+    if(hasAccess(user.user, team.userId)){
+      setSelectedTeam(team);
+      setShowEditModal(true);
+    }
   };
 
   const handleTeamRemove = (team) => {
-    setSelectedTeam(team);
-    setShowRemoveModal(true);
+    if(hasAccess(user.user, team.userId)){
+      setSelectedTeam(team);
+      setShowRemoveModal(true);
+    }
   };
 
   useEffect(() => {
@@ -95,7 +102,9 @@ const Teams = () => {
       headerName: "Actions",
       sortable: false,
       minWidth: 200,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        console.log(params.row.userId)
+        return (
         <Box display="flex" justifyContent="left" gap="0.5rem">
           <IconButton
             aria-label="view"
@@ -108,6 +117,7 @@ const Teams = () => {
             aria-label="edit"
             sx={{ color: "orange" }}
             onClick={() => handleTeamEdit(params.row)}
+            disabled={!hasAccess(user.user, params.row.userId)}
           >
             <ModeEditIcon />
           </IconButton>
@@ -115,11 +125,12 @@ const Teams = () => {
             aria-label="remove"
             sx={{ color: "red" }}
             onClick={() => handleTeamRemove(params.row)}
+            disabled={!hasAccess(user.user, params.row.userId)}
           >
             <DeleteForeverIcon />
           </IconButton>
         </Box>
-      ),
+          )}
     },
   ];
 

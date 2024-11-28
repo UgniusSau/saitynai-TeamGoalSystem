@@ -8,7 +8,8 @@ namespace TeamGoalSystem.Data.Models.DTO
         string Description,
         DateTime CreatedDate,
         DateTime FinishDate,
-        bool IsCompleted
+        bool IsCompleted,
+        Guid UserId
     );
 
     public record CreateGoalDTO(

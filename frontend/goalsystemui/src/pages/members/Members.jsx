@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import {
@@ -20,6 +20,8 @@ import {
   useMembersList,
   useUpdateMember,
 } from "../../hooks/members/members";
+import { UserContext } from "../../services/authProvider";
+import { hasAccess } from "../../helpers/determineObjectManipulationRights";
 
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -27,6 +29,7 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 
 const Members = () => {
+  const user = useContext(UserContext);
   const navigate = useNavigate();
   const { teamId } = useParams();
   const theme = useTheme();
@@ -55,13 +58,17 @@ const Members = () => {
   };
 
   const handleMemberEdit = (row) => {
-    setMember(row);
-    setShowMemberEditModal(true);
+    if (hasAccess(user.user, row.userId)) {
+      setMember(row);
+      setShowMemberEditModal(true);
+    }
   };
 
   const handleMemberRemove = (row) => {
-    setMember(row);
-    setShowMemberRemoveModal(true);
+    if (hasAccess(user.user, row.userId)) {
+      setMember(row);
+      setShowMemberRemoveModal(true);
+    }
   };
 
   const handleNavigateMemberGoals = (row) => {
@@ -69,7 +76,12 @@ const Members = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", minWidth: 50, flex: isSmallScreen ? 0 : 1 },
+    {
+      field: "id",
+      headerName: "ID",
+      minWidth: 50,
+      flex: isSmallScreen ? 0 : 1,
+    },
     {
       field: "name",
       headerName: "First Name",
@@ -125,6 +137,7 @@ const Members = () => {
             aria-label="edit"
             sx={{ color: "orange" }}
             onClick={() => handleMemberEdit(params.row)}
+            disabled={!hasAccess(user.user, params.row.userId)}
           >
             <ModeEditIcon />
           </IconButton>
@@ -132,6 +145,7 @@ const Members = () => {
             aria-label="remove"
             sx={{ color: "red" }}
             onClick={() => handleMemberRemove(params.row)}
+            disabled={!hasAccess(user.user, params.row.userId)}
           >
             <DeleteForeverIcon />
           </IconButton>
@@ -150,7 +164,11 @@ const Members = () => {
         justifyContent="center"
         marginBottom={isSmallScreen ? "1rem" : "1rem"}
       >
-        <Button variant="contained" onClick={() => setShowMemberCreateModal(true)}>
+        <Button
+          variant="contained"
+          onClick={() => setShowMemberCreateModal(true)}
+          disabled={!hasAccess(user.user, gridRows[0]?.userId)}
+        >
           Add Member
         </Button>
       </Box>

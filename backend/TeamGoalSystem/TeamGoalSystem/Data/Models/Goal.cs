@@ -27,7 +27,7 @@ namespace TeamGoalSystem.Data.Models
 
         public GoalDTO ToDto()
         {
-            return new GoalDTO(Id, Title, Description, CreatedDate, FinishDate, IsCompleted);
+            return new GoalDTO(Id, Title, Description, CreatedDate, FinishDate, IsCompleted, new Guid(UserId));
         }
     }
 }

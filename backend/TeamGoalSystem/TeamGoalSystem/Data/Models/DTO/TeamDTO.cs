@@ -8,7 +8,8 @@ namespace TeamGoalSystem.Data.Models.DTO
         string Office,
         string Division,
         DateTime Created,
-        string TeamLeaderName
+        string TeamLeaderName,
+        Guid UserId
     );
 
     public record CreateTeamDTO(

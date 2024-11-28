@@ -9,9 +9,17 @@ export const PrivateRoute = ({ children, accessLevel }) => {
       "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
     ];
 
-  if (userAccessLevel !== undefined && accessLevel.includes(userAccessLevel)) {
+  if (
+    Array.isArray(userAccessLevel) &&
+    userAccessLevel.some((role) => accessLevel.includes(role))
+  ) {
     return children;
+  } else if (
+    typeof userAccessLevel === "string" &&
+    accessLevel.includes(userAccessLevel)
+  ) {
+    return children;
+  } else {
+    return <Navigate to="/login" />;
   }
-
-  return <Navigate to="/login" />;
 };

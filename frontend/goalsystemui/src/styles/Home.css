@@ -67,17 +67,37 @@
   overflow: hidden; /* Ensure the content stays inside the box */
 }
 
+@keyframes tilt {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(45deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-45deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.responsive-image {
+  animation: tilt 2s infinite; /* Adjust duration and infinite for continuous animation */
+  display: block;
+  margin: auto;
+  max-width: 200px;
+}
+
 /* Fix layout for smaller screens */
 @media (max-width: 768px) {
   .content {
     padding: 15px;
     margin-bottom: 100px; /* Add extra space for smaller screens */
   }
-
-  .responsive-image {
-    max-width: 150px;
-  }
-
   .login-button,
   .register-button {
     font-size: 14px;
