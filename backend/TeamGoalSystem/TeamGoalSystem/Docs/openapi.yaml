@@ -7,420 +7,13 @@ info:
 servers:
   - url: https://localhost:7088
 
-paths:
-  /teams:
-    get:
-      summary: Get a list of all teams
-      tags:
-        - team
-      operationId: getAllTeams
-      responses:
-        "200":
-          description: A list of teams
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Team"
-              example:
-                - id: 1
-                  title: "Marketing Team"
-                  office: "New York"
-                  division: "Sales"
-                  teamLeaderName: "John Doe"
-                  created: "2023-01-01T00:00:00Z"
-                - id: 2
-                  title: "Development Team"
-                  office: "San Francisco"
-                  division: "Engineering"
-                  teamLeaderName: "Jane Smith"
-                  created: "2023-02-01T00:00:00Z"
-              
-    post:
-      summary: Create a new team
-      tags:
-        - team
-      operationId: createTeam
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateTeam"
-            example:
-              title: "Support Team"
-              office: "London"
-              division: "Customer Support"
-              teamLeaderName: "Alice Johnson"
-      responses:
-        "201":
-          description: Team created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Team"
-              example:
-                id: 3
-                title: "Support Team"
-                office: "London"
-                division: "Customer Support"
-                teamLeaderName: "Alice Johnson"
-                created: "2023-03-01T00:00:00Z"
-        "400":
-          description: Bad request
-        "422":
-          $ref: "#/components/responses/unprocessableEntity"
-
-  /teams/{teamId}:
-    parameters:
-      - $ref: '#/components/parameters/teamId'
-    get:
-      summary: Get a team by ID
-      tags:
-        - team
-      operationId: getTeamById
-      responses:
-        "200":
-          description: A single team
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Team"
-              example:
-                id: 1
-                title: "Marketing Team"
-                office: "New York"
-                division: "Sales"
-                teamLeaderName: "John Doe"
-                created: "2023-01-01T00:00:00Z"
-        "404":
-          $ref: "#/components/responses/notFound"
-    put:
-      summary: Update a team by ID
-      tags:
-        - team
-      operationId: updateTeam
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateTeam"
-            example:
-              title: "Updated Marketing Team"
-              office: "New York"
-              division: "Sales"
-              teamLeaderName: "John Doe"
-      responses:
-        "200":
-          description: Team updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Team"
-              example:
-                id: 1
-                title: "Updated Marketing Team"
-                office: "New York"
-                division: "Sales"
-                teamLeaderName: "John Doe"
-                created: "2023-01-01T00:00:00Z"
-        "404":
-          $ref: "#/components/responses/notFound"
-        "400":
-          description: Bad request
-        "422":
-          $ref: "#/components/responses/unprocessableEntity"
-    delete:
-      summary: Delete a team by ID
-      tags:
-        - team
-      operationId: deleteTeam
-      responses:
-        "204":
-          description: Team deleted
-        "404":
-          $ref: "#/components/responses/notFound"
-
-  /teams/{teamId}/members:
-    parameters:
-      - $ref: '#/components/parameters/teamId'
-    get:
-      summary: Get members of a team
-      tags:
-        - member
-      operationId: getAllTeamMembers
-      responses:
-        "200":
-          description: A list of team members
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Member"
-              example:
-                - id: 1
-                  name: "John"
-                  surname: "Doe"
-                  role: "Developer"
-                  email: "john.doe@example.com"
-                  joinDate: "2023-03-01T00:00:00Z"
-                - id: 2
-                  name: "Jane"
-                  surname: "Smith"
-                  role: "Manager"
-                  email: "jane.smith@example.com"
-                  joinDate: "2023-03-05T00:00:00Z"
-        "404":
-          $ref: "#/components/responses/notFound"
-    post:
-      summary: Add a new member to the team
-      tags:
-        - member
-      operationId: createTeamMember
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateMember"
-            example:
-              name: "Alice"
-              surname: "Johnson"
-              role: "Support"
-              email: "alice.johnson@example.com"
-              joinDate: "2023-04-01T00:00:00Z"
-      responses:
-        "201":
-          description: Member created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Member"
-              example:
-                id: 3
-                name: "Alice"
-                surname: "Johnson"
-                role: "Support"
-                email: "alice.johnson@example.com"
-                joinDate: "2023-04-01T00:00:00Z"
-        "400":
-          description: Bad request
-        "404":
-          $ref: "#/components/responses/notFound"
-        "422":
-          $ref: "#/components/responses/unprocessableEntity"
-
-  /teams/{teamId}/members/{memberId}:
-    parameters:
-      - $ref: '#/components/parameters/teamId'
-      - $ref: '#/components/parameters/memberId'
-    get:
-      summary: Get a specific team member by ID
-      tags:
-        - member
-      operationId: getTeamMemberById
-      responses:
-        "200":
-          description: A single team member
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Member"
-              example:
-                id: 1
-                name: "John"
-                surname: "Doe"
-                role: "Developer"
-                email: "john.doe@example.com"
-                joinDate: "2023-03-01T00:00:00Z"
-        "404":
-          $ref: "#/components/responses/notFound"
-    put:
-      summary: Update a team member by ID
-      tags:
-        - member
-      operationId: updateTeamMember
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateMember"
-            example:
-              role: "Lead Developer"
-              email: "john.doe@newexample.com"
-      responses:
-        "200":
-          description: Member updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Member"
-              example:
-                id: 1
-                name: "John"
-                surname: "Doe"
-                role: "Lead Developer"
-                email: "john.doe@newexample.com"
-                joinDate: "2023-03-01T00:00:00Z"
-        "404":
-          $ref: "#/components/responses/notFound"
-        "400":
-          description: Bad request
-        "422":
-          $ref: "#/components/responses/unprocessableEntity"
-    delete:
-      summary: Delete a member from the team by ID
-      tags:
-        - member
-      operationId: deleteTeamMember
-      responses:
-        "204":
-          description: Member deleted
-        "404":
-          $ref: "#/components/responses/notFound"
-
-  /teams/{teamId}/members/{memberId}/goals:
-    parameters:
-      - $ref: '#/components/parameters/teamId'
-      - $ref: '#/components/parameters/memberId'
-    get:
-      summary: Get all goals for a team member
-      tags:
-        - goal
-      operationId: getAllTeamMemberGoals
-      responses:
-        "200":
-          description: A list of team member goals
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Goal"
-              example:
-                - id: 1
-                  title: "Complete Project A"
-                  description: "Finish all tasks related to Project A"
-                  createdDate: "2023-01-15T00:00:00Z"
-                  finishDate: "2023-10-01T00:00:00Z"
-                  isCompleted: false
-                - id: 2
-                  title: "Attend Training"
-                  description: "Complete leadership training program"
-                  createdDate: "2023-02-01T00:00:00Z"
-                  finishDate: "2023-06-01T00:00:00Z"
-                  isCompleted: true
-        "404":
-          $ref: "#/components/responses/notFound"
-    post:
-      summary: Add a new goal to a team member
-      tags:
-        - goal
-      operationId: createTeamMemberGoal
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateGoal"
-            example:
-              title: "Improve Coding Skills"
-              description: "Complete advanced coding course"
-              finishDate: "2024-10-01T00:00:00Z"
-              isCompleted: false
-      responses:
-        "201":
-          description: Goal created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Goal"
-              example:
-                id: 3
-                title: "Improve Coding Skills"
-                description: "Complete advanced coding course"
-                createdDate: "2023-04-01T00:00:00Z"
-                finishDate: "2024-10-01T00:00:00Z"
-                isCompleted: false
-        "400":
-          description: Bad request
-        "404":
-          $ref: "#/components/responses/notFound"
-        "422":
-          $ref: "#/components/responses/unprocessableEntity"
-
-  /teams/{teamId}/members/{memberId}/goals/{goalId}:
-    parameters:
-      - $ref: '#/components/parameters/teamId'
-      - $ref: '#/components/parameters/memberId'
-      - $ref: '#/components/parameters/goalId'
-    get:
-      summary: Get a specific goal for a team member by ID
-      tags:
-        - goal
-      operationId: getTeamMemberGoalById
-      responses:
-        "200":
-          description: A single goal
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Goal"
-              example:
-                id: 1
-                title: "Complete Project A"
-                description: "Finish all tasks related to Project A"
-                createdDate: "2023-01-15T00:00:00Z"
-                finishDate: "2023-10-01T00:00:00Z"
-                isCompleted: false
-        "404":
-          $ref: "#/components/responses/notFound"
-    put:
-      summary: Update a goal for a team member by ID
-      tags:
-        - goal
-      operationId: updateTeamMemberGoal
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateGoal"
-            example:
-              title: "Update Coding Skills"
-              description: "Complete updated coding course"
-              finishDate: "2024-12-01T00:00:00Z"
-              isCompleted: false
-      responses:
-        "200":
-          description: Goal updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Goal"
-              example:
-                id: 1
-                title: "Update Coding Skills"
-                description: "Complete updated coding course"
-                createdDate: "2023-01-15T00:00:00Z"
-                finishDate: "2024-12-01T00:00:00Z"
-                isCompleted: false
-        "404":
-          $ref: "#/components/responses/notFound"
-        "400":
-          description: Bad request
-        "422":
-          $ref: "#/components/responses/unprocessableEntity"
-    delete:
-      summary: Delete a goal from a team member by ID
-      tags:
-        - goal
-      operationId: deleteTeamMemberGoal
-      responses:
-        "204":
-          description: Goal deleted
-        "404":
-          $ref: "#/components/responses/notFound"
-
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     problemDetails:
       type: object
@@ -690,12 +283,567 @@ components:
       schema:
         type: integer
       description: The unique identifier of the goal
-    
 
-tags:
-  - name: team
-    description: Operations related to teams
-  - name: member
-    description: Operations related to team members
-  - name: goal
-    description: Operations related to team member goals
+security:
+  - BearerAuth: []
+
+paths:
+  /api/auth/registerTeamLeader:
+    post:
+      summary: Register a new Team Leader
+      tags:
+        - Authentication
+      operationId: registerTeamLeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                surname:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                - name
+                - surname
+                - username
+                - email
+                - password
+              example:
+                name: "John"
+                surname: "Doe"
+                username: "johndoe"
+                email: "john.doe@example.com"
+                password: "P@ssw0rd!"
+      responses:
+        "201":
+          description: Team Leader successfully registered
+        "400":
+          description: Invalid JSON format
+        "422":
+          description: Validation errors or username already taken
+      security: []
+
+  /api/auth/login:
+    post:
+      summary: Login and retrieve access token
+      tags:
+        - Authentication
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                  format: password
+              required:
+                - username
+                - password
+              example:
+                username: "johndoe"
+                password: "P@ssw0rd!"
+      responses:
+        "200":
+          description: Access token and refresh token issued
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        "404":
+          description: User not found
+        "422":
+          description: Incorrect password or validation error
+      security: []
+
+  /api/auth/accessToken:
+    post:
+      summary: Refresh access token
+      tags:
+        - Authentication
+      operationId: accessToken
+      responses:
+        "200":
+          description: New access token issued
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        "422":
+          description: Unable to get refresh token or claims
+        "404":
+          description: User or session not found
+      security: []
+
+  /api/auth/logOut:
+    post:
+      summary: Log out and invalidate session
+      tags:
+        - Authentication
+      operationId: logOut
+      responses:
+        "200":
+          description: Logout successful
+        "422":
+          description: Unable to get refresh token or claims
+        "404":
+          description: User or session not found
+      security: []
+
+  /teams:
+    get:
+      summary: Get a list of all teams
+      tags:
+        - team
+      operationId: getAllTeams
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: A list of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Team"
+              example:
+                - id: 1
+                  title: "Marketing Team"
+                  office: "New York"
+                  division: "Sales"
+                  teamLeaderName: "John Doe"
+                  created: "2023-01-01T00:00:00Z"
+                - id: 2
+                  title: "Development Team"
+                  office: "San Francisco"
+                  division: "Engineering"
+                  teamLeaderName: "Jane Smith"
+                  created: "2023-02-01T00:00:00Z"
+    post:
+      summary: Create a new team
+      tags:
+        - team
+      operationId: createTeam
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTeam"
+            example:
+              title: "Support Team"
+              office: "London"
+              division: "Customer Support"
+              teamLeaderName: "Alice Johnson"
+      responses:
+        "201":
+          description: Team created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Team"
+              example:
+                id: 3
+                title: "Support Team"
+                office: "London"
+                division: "Customer Support"
+                teamLeaderName: "Alice Johnson"
+                created: "2023-03-01T00:00:00Z"
+        "400":
+          description: Bad request
+        "422":
+          $ref: "#/components/responses/unprocessableEntity"
+
+  /teams/{teamId}:
+    parameters:
+      - $ref: '#/components/parameters/teamId'
+    get:
+      summary: Get a team by ID
+      tags:
+        - team
+      operationId: getTeamById
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: A single team
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Team"
+              example:
+                id: 1
+                title: "Marketing Team"
+                office: "New York"
+                division: "Sales"
+                teamLeaderName: "John Doe"
+                created: "2023-01-01T00:00:00Z"
+        "404":
+          $ref: "#/components/responses/notFound"
+    patch:
+      summary: Update a team by ID
+      tags:
+        - team
+      operationId: updateTeam
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTeam"
+            example:
+              title: "Updated Marketing Team"
+              office: "New York"
+              division: "Sales"
+              teamLeaderName: "John Doe"
+      responses:
+        "200":
+          description: Team updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Team"
+              example:
+                id: 1
+                title: "Updated Marketing Team"
+                office: "New York"
+                division: "Sales"
+                teamLeaderName: "John Doe"
+                created: "2023-01-01T00:00:00Z"
+        "404":
+          $ref: "#/components/responses/notFound"
+        "400":
+          description: Bad request
+        "422":
+          $ref: "#/components/responses/unprocessableEntity"
+    delete:
+      summary: Delete a team by ID
+      tags:
+        - team
+      operationId: deleteTeam
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: Team deleted
+        "404":
+          $ref: "#/components/responses/notFound"
+
+  /teams/{teamId}/members:
+    parameters:
+      - $ref: '#/components/parameters/teamId'
+    get:
+      summary: Get members of a team
+      tags:
+        - member
+      operationId: getAllTeamMembers
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: A list of team members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Member"
+              example:
+                - id: 1
+                  name: "John"
+                  surname: "Doe"
+                  role: "Developer"
+                  email: "john.doe@example.com"
+                  joinDate: "2023-03-01T00:00:00Z"
+                - id: 2
+                  name: "Jane"
+                  surname: "Smith"
+                  role: "Manager"
+                  email: "jane.smith@example.com"
+                  joinDate: "2023-03-05T00:00:00Z"
+        "404":
+          $ref: "#/components/responses/notFound"
+    post:
+      summary: Add a new member to the team
+      tags:
+        - member
+      operationId: createTeamMember
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMember"
+            example:
+              name: "Alice"
+              surname: "Johnson"
+              role: "Support"
+              email: "alice.johnson@example.com"
+              joinDate: "2023-04-01T00:00:00Z"
+      responses:
+        "201":
+          description: Member created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+              example:
+                id: 3
+                name: "Alice"
+                surname: "Johnson"
+                role: "Support"
+                email: "alice.johnson@example.com"
+                joinDate: "2023-04-01T00:00:00Z"
+        "400":
+          description: Bad request
+        "404":
+          $ref: "#/components/responses/notFound"
+        "422":
+          $ref: "#/components/responses/unprocessableEntity"
+
+  /teams/{teamId}/members/{memberId}:
+    parameters:
+      - $ref: '#/components/parameters/teamId'
+      - $ref: '#/components/parameters/memberId'
+    get:
+      summary: Get a specific team member by ID
+      tags:
+        - member
+      operationId: getTeamMemberById
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: A single team member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+              example:
+                id: 1
+                name: "John"
+                surname: "Doe"
+                role: "Developer"
+                email: "john.doe@example.com"
+                joinDate: "2023-03-01T00:00:00Z"
+        "404":
+          $ref: "#/components/responses/notFound"
+    patch:
+      summary: Update a team member by ID
+      tags:
+        - member
+      operationId: updateTeamMember
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMember"
+            example:
+              role: "Lead Developer"
+              email: "john.doe@newexample.com"
+      responses:
+        "200":
+          description: Member updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+              example:
+                id: 1
+                name: "John"
+                surname: "Doe"
+                role: "Lead Developer"
+                email: "john.doe@newexample.com"
+                joinDate: "2023-03-01T00:00:00Z"
+        "404":
+          $ref: "#/components/responses/notFound"
+        "400":
+          description: Bad request
+        "422":
+          $ref: "#/components/responses/unprocessableEntity"
+    delete:
+      summary: Delete a member from the team by ID
+      tags:
+        - member
+      operationId: deleteTeamMember
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: Member deleted
+        "404":
+          $ref: "#/components/responses/notFound"
+
+  /teams/{teamId}/members/{memberId}/goals:
+    parameters:
+      - $ref: '#/components/parameters/teamId'
+      - $ref: '#/components/parameters/memberId'
+    get:
+      summary: Get all goals for a team member
+      tags:
+        - goal
+      operationId: getAllTeamMemberGoals
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: A list of team member goals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Goal"
+              example:
+                - id: 1
+                  title: "Complete Project A"
+                  description: "Finish all tasks related to Project A"
+                  createdDate: "2023-01-15T00:00:00Z"
+                  finishDate: "2023-10-01T00:00:00Z"
+                  isCompleted: false
+                - id: 2
+                  title: "Attend Training"
+                  description: "Complete leadership training program"
+                  createdDate: "2023-02-01T00:00:00Z"
+                  finishDate: "2023-06-01T00:00:00Z"
+                  isCompleted: true
+        "404":
+          $ref: "#/components/responses/notFound"
+    post:
+      summary: Add a new goal to a team member
+      tags:
+        - goal
+      operationId: createTeamMemberGoal
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGoal"
+            example:
+              title: "Improve Coding Skills"
+              description: "Complete advanced coding course"
+              finishDate: "2024-10-01T00:00:00Z"
+              isCompleted: false
+      responses:
+        "201":
+          description: Goal created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+              example:
+                id: 3
+                title: "Improve Coding Skills"
+                description: "Complete advanced coding course"
+                createdDate: "2023-04-01T00:00:00Z"
+                finishDate: "2024-10-01T00:00:00Z"
+                isCompleted: false
+        "400":
+          description: Bad request
+        "404":
+          $ref: "#/components/responses/notFound"
+        "422":
+          $ref: "#/components/responses/unprocessableEntity"
+
+  /teams/{teamId}/members/{memberId}/goals/{goalId}:
+    parameters:
+      - $ref: '#/components/parameters/teamId'
+      - $ref: '#/components/parameters/memberId'
+      - $ref: '#/components/parameters/goalId'
+    get:
+      summary: Get a specific goal for a team member by ID
+      tags:
+        - goal
+      operationId: getTeamMemberGoalById
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: A single goal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+              example:
+                id: 1
+                title: "Complete Project A"
+                description: "Finish all tasks related to Project A"
+                createdDate: "2023-01-15T00:00:00Z"
+                finishDate: "2023-10-01T00:00:00Z"
+                isCompleted: false
+        "404":
+          $ref: "#/components/responses/notFound"
+    patch:
+      summary: Update a goal for a team member by ID
+      tags:
+        - goal
+      operationId: updateTeamMemberGoal
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateGoal"
+            example:
+              title: "Update Coding Skills"
+              description: "Complete updated coding course"
+              finishDate: "2024-12-01T00:00:00Z"
+              isCompleted: false
+      responses:
+        "200":
+          description: Goal updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+              example:
+                id: 1
+                title: "Update Coding Skills"
+                description: "Complete updated coding course"
+                createdDate: "2023-01-15T00:00:00Z"
+                finishDate: "2024-12-01T00:00:00Z"
+                isCompleted: false
+        "404":
+          $ref: "#/components/responses/notFound"
+        "400":
+          description: Bad request
+        "422":
+          $ref: "#/components/responses/unprocessableEntity"
+    delete:
+      summary: Delete a goal from a team member by ID
+      tags:
+        - goal
+      operationId: deleteTeamMemberGoal
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: Goal deleted
+        "404":
+          $ref: "#/components/responses/notFound"
